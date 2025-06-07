@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}SM Hospital{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header class="header-simple" role="banner">
+        <h1>SM Hospital</h1>
+        <button id="nav-toggle" aria-controls="primary-navigation" aria-expanded="false" aria-label="Toggle navigation menu">
+            &#9776;
+        </button>
+        <nav id="primary-navigation" role="navigation" aria-label="Primary navigation">
+            <ul class="nav-list">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/appointments" class="nav-link">Appointments</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    {% block header_content %}{% endblock %}
+
+    <main class="container" role="main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <button id="back-to-top" aria-label="Back to top" title="Back to top">&#8679;</button>
+
+    <footer role="contentinfo" class="site-footer">
+        <div class="footer-container">
+            <div class="footer-section contact-info">
+                <h3>Contact Us</h3>
+                <p>SRMIST, Chennai, Tamil Nadu<br />603-203</p>
+                <p>Phone: 7070662994 / 9906067891</p>
+                <p>Email: info@smhospital.com</p>
+            </div>
+            <div class="footer-section useful-links">
+                <h3>Useful Links</h3>
+                <ul>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms of Service</a></li>
+                    <li><a href="/about">About Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section social-media">
+                <h3>Follow Us</h3>
+                <ul class="social-icons">
+                    <li><a href="#" aria-label="Facebook">Facebook</a></li>
+                    <li><a href="#" aria-label="Twitter">Twitter</a></li>
+                    <li><a href="#" aria-label="Instagram">Instagram</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 SM Hospital. All rights reserved.</p>
+        </div>
+    </footer>
+
+    {% block scripts %}
+    <script>
+        // Responsive navigation toggle
+        const navToggle = document.getElementById('nav-toggle');
+        const primaryNav = document.getElementById('primary-navigation');
+
+        navToggle.addEventListener('click', () => {
+            const expanded = navToggle.getAttribute('aria-expanded') === 'true' || false;
+            navToggle.setAttribute('aria-expanded', !expanded);
+            primaryNav.classList.toggle('active');
+        });
+
+        // Back to top button
+        const backToTopButton = document.getElementById('back-to-top');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopButton.style.display = 'block';
+            } else {
+                backToTopButton.style.display = 'none';
+            }
+        });
+
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+    {% endblock %}
+</body>
+</html>

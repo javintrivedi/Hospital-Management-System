@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Welcome to SM Hospital</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%; /* Ensure full width */
+            font-family: 'Roboto', sans-serif;
+        }
+
+
+        #animated-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 0.8rem;
+            text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.7);
+        }
+        
+        .header-content p {
+            font-size: 1.3rem;
+            margin-top: 0;
+        }
+        
+        .welcome-section {
+            padding: 0 20px; /* Remove top padding */
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .welcome-section h2 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .welcome-section > p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+        
+        .features-grid {
+            margin-top: 0; /* Remove top margin */
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .cta-section {
+            background: linear-gradient(to right, #00796b, #004d40);
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            margin-top: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: white; /* Ensure the text color is white */
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);   
+        }
+        
+        .cta-section p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: white;
+            color: #00796b;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.05);
+        }
+        
+        .header-simple {
+            position: relative; /* Ensure it stays above the parallax header */
+            z-index: 1;
+            background-color: rgba(0, 121, 107, 0.7); /* Transparent teal */
+            backdrop-filter: blur(10px); /* Blur effect */
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-simple h1 {
+            font-size: 1.8rem;
+            margin: 0;
+            padding-left: 2%;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #b2dfdb;
+        }
+
+        #nav-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 3rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            #nav-toggle {
+                display: block;
+            }
+
+            .nav-list {
+                display: none;
+                flex-direction: column;
+                background-color: #004d40;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                width: 200px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            }
+
+            .nav-list.active {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header-simple" role="banner">
+        <h1>SM Hospital</h1>
+        <button id="nav-toggle" aria-controls="primary-navigation" aria-expanded="false" aria-label="Toggle navigation menu">
+            &#9776;
+        </button>
+        <nav id="primary-navigation" role="navigation" aria-label="Primary navigation">
+            <ul class="nav-list">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/appointments" class="nav-link">Appointments</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <header class="parallax-header">
+        <canvas id="animated-background" aria-hidden="true"></canvas>
+        <div class="header-content">
+        </div>
+    </header>
+
+    <main class="container" role="main">
+        <section class="welcome-section">
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">👨‍⚕️</div>
+                    <h3>Expert Doctors</h3>
+                    <p>Our team of highly qualified medical professionals is committed to your well-being.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🏥</div>
+                    <h3>Modern Facilities</h3>
+                    <p>State-of-the-art equipment and comfortable rooms for the best patient experience.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⏱️</div>
+                    <h3>24/7 Service</h3>
+                    <p>Round-the-clock medical care for emergencies and patient needs.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💊</div>
+                    <h3>Pharmacy</h3>
+                    <p>On-site pharmacy with a wide range of medications and health products.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h2>Need Medical Assistance?</h2>
+            <p>Visit our hospital or contact us for appointments and inquiries.</p>
+            <a href="/appointments" class="btn btn-primary">Make an Appointment</a>
+        </section>
+    </main>
+
+    <button id="back-to-top" aria-label="Back to top" title="Back to top">&#8679;</button>
+
+    <footer role="contentinfo" class="site-footer">
+        <div class="footer-container">
+            <div class="footer-section contact-info">
+                <h3>Contact Us</h3>
+                <p>SRMIST, Chennai, Tamil Nadu<br />603-203</p>
+                <p>Phone: 7070662994 / 9906067891</p>
+                <p>Email: info@smhospital.com</p>
+            </div>
+            <div class="footer-section useful-links">
+                <h3>Useful Links</h3>
+                <ul>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms of Service</a></li>
+                    <li><a href="/about">About Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section social-media">
+                <h3>Follow Us</h3>
+                <ul class="social-icons">
+                    <li><a href="#" aria-label="Facebook">Facebook</a></li>
+                    <li><a href="#" aria-label="Twitter">Twitter</a></li>
+                    <li><a href="#" aria-label="Instagram">Instagram</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 SM Hospital. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Responsive navigation toggle
+        const navToggle = document.getElementById('nav-toggle');
+        const primaryNav = document.getElementById('primary-navigation');
+
+        navToggle.addEventListener('click', () => {
+            const expanded = navToggle.getAttribute('aria-expanded') === 'true' || false;
+            navToggle.setAttribute('aria-expanded', !expanded);
+            primaryNav.classList.toggle('active');
+        });
+
+        // Back to top button
+        const backToTopButton = document.getElementById('back-to-top');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopButton.style.display = 'block';
+            } else {
+                backToTopButton.style.display = 'none';
+            }
+        });
+
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Animated particles background for header
+        const canvas = document.getElementById('animated-background');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function init() {
+            resize();
+            createParticles();
+            animate();
+        }
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+
+        function createParticles() {
+            particles = [];
+            const particleCount = 80;
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    radius: Math.random() * 2 + 1,
+                    speedX: (Math.random() - 0.5) * 0.5,
+                    speedY: (Math.random() - 0.5) * 0.5,
+                    alpha: Math.random() * 0.5 + 0.3
+                });
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.x += p.speedX;
+                p.y += p.speedY;
+
+                if (p.x < 0) p.x = width;
+                if (p.x > width) p.x = 0;
+                if (p.y < 0) p.y = height;
+                if (p.y > height) p.y = 0;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+                ctx.fill();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resize);
+        window.addEventListener('load', init);
+    </script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us - SM Hospital{% endblock %}
+
+{% block content %}
+<canvas id="animated-background" aria-hidden="true"></canvas> <!-- Add animated background -->
+<main class="container" role="main">
+    <h1>About Us</h1>
+    <p>Welcome to SM Hospital, your trusted healthcare partner. We are dedicated to providing the highest quality medical care with compassion and professionalism.</p>
+    <h3>Our Mission</h3>
+    <p>To deliver exceptional healthcare services that improve the health and well-being of our community.</p>
+    <h3>Our Vision</h3>
+    <p>To be a leading healthcare institution recognized for excellence in patient care, education, and research.</p>
+    <h3>Our Values</h3>
+    <ul>
+        <li>Compassion: We care deeply about our patients and their families.</li>
+        <li>Integrity: We uphold the highest ethical standards in all we do.</li>
+        <li>Excellence: We strive for continuous improvement and innovation.</li>
+        <li>Collaboration: We work together to achieve the best outcomes.</li>
+    </ul>
+    <h3>Contact Information</h3>
+    <p>SRMIST, Chennai, Tamil Nadu, 603-203</p>
+    <p>Phone: 7070662994 / 9906067891</p>
+    <p>Email: info@smhospital.com</p>
+</main>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='scripts.js') }}"></script> <!-- Include animation script -->
+{% endblock %}

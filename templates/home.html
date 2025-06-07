@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to SM Hospital{% endblock %}
+
+{% block header %}
+<header class="parallax-header">
+    <canvas id="animated-background" aria-hidden="true"></canvas>
+    <div class="header-content">
+        <h1>SM Hospital</h1>
+        <p>Your Health, Our Priority</p>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<section class="welcome-section">
+    <h2>Welcome to SM Hospital</h2>
+    <p>We are dedicated to providing exceptional healthcare services with compassion and expertise.</p>
+    
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">👨‍⚕️</div>
+            <h3>Expert Doctors</h3>
+            <p>Our team of highly qualified medical professionals is committed to your well-being.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">🏥</div>
+            <h3>Modern Facilities</h3>
+            <p>State-of-the-art equipment and comfortable rooms for the best patient experience.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">⏱️</div>
+            <h3>24/7 Service</h3>
+            <p>Round-the-clock medical care for emergencies and patient needs.</p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">💊</div>
+            <h3>Pharmacy</h3>
+            <p>On-site pharmacy with a wide range of medications and health products.</p>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section">
+    <h2>Need Medical Assistance?</h2>
+    <p>Visit our hospital or contact us for appointments and inquiries.</p>
+    <a href="/appointments" class="btn btn-primary">Make an Appointment</a>
+</section>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: 'Roboto', sans-serif;
+    }
+    
+    .parallax-header {
+        position: relative;
+        height: 100vh;
+        background-image: linear-gradient(to bottom, rgba(0, 128, 128, 0.8), rgba(0, 64, 64, 0.8)), url('/static/images/healthcare-bg.jpg');
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        text-align: center;
+        overflow: hidden;
+    }
+
+    #animated-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+    }
+    
+    .header-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .header-content h1 {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+    }
+    
+    .header-content p {
+        font-size: 1.5rem;
+        text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+        margin-top: 0;
+    }
+    
+    .welcome-section {
+        padding: 60px 20px;
+        text-align: center;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .welcome-section h2 {
+        font-size: 2.5rem;
+        color: #333;
+        margin-bottom: 20px;
+    }
+    
+    .welcome-section > p {
+        font-size: 1.2rem;
+        max-width: 800px;
+        margin: 0 auto 40px;
+    }
+    
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+    
+    .feature-card {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+    
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+    }
+    
+    .feature-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        color: #333;
+    }
+    
+    .cta-section {
+        background: linear-gradient(to right, #00796b, #004d40);
+        color: white;
+        text-align: center;
+        padding: 60px 20px;
+        margin-top: 60px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .cta-section h2 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        color: white;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.7);   
+    }
+    
+    .cta-section p {
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin: 0 auto 30px;
+    }
+    
+    .btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background-color: white;
+        color: #00796b;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        font-size: 1.1rem;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+    
+    .btn:hover {
+        background-color: #f0f0f0;
+        transform: scale(1.05);
+    }
+    
+    @media (max-width: 768px) {
+        .header-content h1 {
+            font-size: 3rem;
+        }
+        
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    // Animated particles background for header
+    const canvas = document.getElementById('animated-background');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+
+    function init() {
+        resize();
+        createParticles();
+        animate();
+    }
+
+    function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+    }
+
+    function createParticles() {
+        particles = [];
+        const particleCount = 80;
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                radius: Math.random() * 2 + 1,
+                speedX: (Math.random() - 0.5) * 0.5,
+                speedY: (Math.random() - 0.5) * 0.5,
+                alpha: Math.random() * 0.5 + 0.3
+            });
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => {
+            p.x += p.speedX;
+            p.y += p.speedY;
+
+            if (p.x < 0) p.x = width;
+            if (p.x > width) p.x = 0;
+            if (p.y < 0) p.y = height;
+            if (p.y > height) p.y = 0;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+            ctx.fill();
+        });
+        requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', resize);
+    window.addEventListener('load', init);
+</script>
+{% endblock %}

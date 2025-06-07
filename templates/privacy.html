@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Privacy Policy - SM Hospital{% endblock %}
+
+{% block content %}
+<canvas id="animated-background" aria-hidden="true"></canvas> <!-- Add animated background -->
+<main class="container" role="main">
+    <h1>Privacy Policy</h1>
+    <p>At SM Hospital, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your personal information.</p>
+    <h3>Information We Collect</h3>
+    <ul>
+        <li>Personal identification information (Name, email address, phone number, etc.)</li>
+        <li>Medical history and health information</li>
+        <li>Appointment and billing information</li>
+    </ul>
+    <h3>How We Use Your Information</h3>
+    <p>Your information is used to provide and improve our healthcare services, manage appointments, and communicate with you effectively.</p>
+    <h3>Data Security</h3>
+    <p>We implement appropriate security measures to protect your data from unauthorized access, alteration, or disclosure.</p>
+    <h3>Sharing of Information</h3>
+    <p>We do not sell or rent your personal information. We may share information with trusted third parties only as necessary to provide healthcare services.</p>
+    <h3>Your Rights</h3>
+    <p>You have the right to access, correct, or delete your personal information. Please contact us for any privacy-related requests.</p>
+    <h3>Changes to This Policy</h3>
+    <p>We may update this Privacy Policy from time to time. Changes will be posted on this page.</p>
+</main>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='scripts.js') }}"></script> <!-- Include animation script -->
+{% endblock %}

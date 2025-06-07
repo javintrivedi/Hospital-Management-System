@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hospital Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+            font-family: 'Roboto', Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        p {
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+        }
+        main {
+            background-color: rgba(255, 255, 255, 0.9);
+            margin: 20px auto;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 1200px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        header.parallax-header {
+            background-image: linear-gradient(to bottom, rgba(0, 128, 128, 0.9), rgba(0, 64, 64, 0.9)), url('/static/images/healthcare-bg.jpg');
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            font-size: clamp(2.5rem, 5vw, 5rem);
+            font-weight: 700;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            scroll-snap-align: start;
+        }
+        nav.monochrome-nav {
+            background-color: rgba(0, 128, 128, 0.7); /* Transparent teal */
+            backdrop-filter: blur(10px); /* Blur effect */
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+        }
+        nav.monochrome-nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav.monochrome-nav ul li {
+            padding: 16px 24px;
+            cursor: pointer;
+            color: white;
+            font-weight: 700;
+            font-size: 1.125rem;
+            transition: background-color 0.3s;
+        }
+        nav.monochrome-nav ul li a {
+            color: white;
+            display: block;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: background-color 0.3s, transform 0.3s ease;
+        }
+        nav.monochrome-nav ul li a:hover,
+        nav.monochrome-nav ul li a:focus {
+            background-color: rgba(255, 255, 255, 0.2); /* Slight hover effect */
+            text-decoration: underline;
+            transform: scale(1.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 1rem;
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+            font-weight: 700;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input, select, textarea {
+            padding: 8px 12px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .form-container {
+            margin-bottom: 20px;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #008080;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .validation-error {
+            color: #d9534f;
+            font-size: 0.9rem;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+        .validation-error {
+            color: #d9534f;
+            font-size: 0.9rem;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+
+        /* Appointments Section Styles */
+        #appointments {
+            margin-top: 40px;
+        }
+
+        #appointments h2 {
+            font-size: 2.5rem;
+            color: #008080;
+            margin-bottom: 15px;
+        }
+
+        #appointments p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        #appointments .form-container {
+            margin-bottom: 20px;
+            max-width: 600px;
+        }
+
+        #appointments input[type="text"],
+        #appointments input[type="datetime-local"] {
+            padding: 8px 12px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        #appointments button {
+            background-color: #008080;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        #appointments button:hover {
+            background-color: #005757;
+        }
+    </style>
+</head>
+<body>
+    <nav class="monochrome-nav">
+        <ul>
+            <li><a href="#doctors">Doctors</a></li>
+            <li><a href="#patients">Patients</a></li>
+            <li><a href="#rooms">Rooms</a></li>
+            <li><a href="#pharmacy">Pharmacy</a></li>
+            <li><a href="#bills">Bill Status</a></li>
+            <li><a href="#appointments">Appointments & Assignments</a></li>
+        </ul>
+    </nav>
+
+    <header class="parallax-header" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+        <h1 style="margin: 0;">🏥 Welcome to SM Hospital</h1>
+        <p style="margin: 0;">Your Health, Our Priority</p>
+    </header>
+    <main id="mainContent" style="opacity: 1; transform: translateY(0); transition: opacity 1s ease, transform 1s ease;">
+        <canvas id="animated-background" aria-hidden="true"></canvas> <!-- Add animated background -->
+        <button onclick="window.location.href='/'" style="margin-bottom: 20px; padding: 10px 20px; background-color: #008080; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700;">Go to Home</button>
+        <!-- Doctors Section -->
+        <section id="doctors" class="content-section">
+            <h2>Doctors</h2>
+            <p>Meet our specialized team of experienced doctors.</p>
+            <table id="doctorsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Qualification</th>
+                        <th>Department</th>
+                    </tr>
+                </thead>
+                <tbody id="doctorsList"></tbody>
+            </table>
+        </section>
+
+        <!-- Patients Section -->
+        <section id="patients" class="content-section">
+            <h2>Patients</h2>
+            <p>View patient records and admission details.</p>
+            <h3>Add New Patient</h3>
+            <form id="addPatientForm">
+                <input type="text" id="pname" placeholder="Name" required>
+                <select id="pgender" required>
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+                <input type="date" id="pdob" required>
+                <input type="text" id="pmobile" placeholder="Mobile Number" required>
+                <button type="button" onclick="addPatient()">Add Patient</button>
+            </form>
+            <table id="patientsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>Date of Birth</th>
+                        <th>Mobile No</th>
+                    </tr>
+                </thead>
+                <tbody id="patientsList"></tbody>
+            </table>
+        </section>
+
+        <!-- Rooms Section -->
+        <section id="rooms" class="content-section">
+            <h2>Rooms</h2>
+            <p>Check room availability and types.</p>
+            <h2>Add Room</h2>
+            <form id="add-room-form">
+                <label for="room_no">Room No:</label>
+                <input type="text" id="room_no" name="room_no" required><br>
+
+                <label for="room_type">Room Type:</label>
+                <input type="text" id="room_type" name="room_type" required><br>
+
+                <label for="status">Status:</label>
+                <input type="text" id="status" name="status" required><br>
+
+                <label for="price">Price:</label>
+                <input type="text" id="price" name="price" required><br>
+
+                <label for="facilities">Facilities:</label>
+                <textarea id="facilities" name="facilities" required></textarea><br>
+
+                <button type="button" onclick="addRoom()">Add Room</button>
+            </form>
+            <table id="roomsTable">
+                <thead>
+                    <tr>
+                        <th>Room No</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Price</th>
+                        <th>Facilities</th>
+                    </tr>
+                </thead>
+                <tbody id="roomsList"></tbody>
+            </table>
+        </section>
+
+        <!-- Pharmacy Section -->
+        <section id="pharmacy" class="content-section">
+            <h2>Pharmacy</h2>
+            <p>View our pharmacy inventory and prescriptions.</p>
+            <table id="pharmacyTable">
+                <thead>
+                    <tr>
+                        <th>Pharmacy ID</th>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Phone Number</th>
+                    </tr>
+                </thead>
+                <tbody id="pharmacyList"></tbody>
+            </table>
+        </section>
+
+        <!-- Bills Section -->
+        <section id="bills" class="content-section">
+            <h2>Bill Status</h2>
+            <p>Check and add billing information.</p>
+        
+            <!-- Bill Add Form -->
+            <div class="form-container">
+                <input type="text" id="bill_patient_id" placeholder="Patient ID">
+                <input type="text" id="bill_amount" placeholder="Amount">
+                <input type="text" id="bill_name" placeholder="Name">
+                <button onclick="addBill()">Add Bill</button>
+            </div>
+        
+            <!-- Bill Table -->
+            <table id="billsTable">
+                <thead>
+                    <tr>
+                        <th>Bill ID</th>
+                        <th>Patient ID</th>
+                        <th>Total Amount</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody id="billsList"></tbody>
+            </table>
+        </section>
+
+        <!-- Appointments Section -->
+        <section id="appointments" class="content-section">
+            <h2>Appointments</h2>
+            <p>View and manage patient appointments.</p>
+
+            <h3>Schedule New Appointment</h3>
+            <form id="addAppointmentForm" class="form-container">
+                <select id="appointment_patient_id" required>
+                    <option value="">Select Patient</option>
+                </select>
+                <select id="appointment_doctor_id" required>
+                    <option value="">Select Doctor</option>
+                </select>
+                <input type="datetime-local" id="appointment_datetime" required>
+                <button type="button" onclick="addAppointment()">Add Appointment</button>
+            </form>
+
+            <table id="appointmentsTable">
+                <thead>
+                    <tr>
+                        <th>Appointment ID</th>
+                        <th>Patient ID</th>
+                        <th>Doctor ID</th>
+                        <th>Date & Time</th>
+                    </tr>
+                </thead>
+                <tbody id="appointmentsList"></tbody>
+            </table>
+
+            <!-- Assignments Section -->
+            <h2>Doctor-Patient-Room Assignments</h2>
+            <p>Assign doctors to patients with room allocation.</p>
+
+            <h3>New Assignment</h3>
+            <form id="addAssignmentForm" class="form-container">
+                <select id="assignment_patient_id" required>
+                    <option value="">Select Patient</option>
+                </select>
+                <select id="assignment_doctor_id" required>
+                    <option value="">Select Doctor</option>
+                </select>
+                <select id="assignment_room_id" required>
+                    <option value="">Select Room</option>
+                </select>
+                <button type="button" onclick="addAssignment()">Add Assignment</button>
+            </form>
+
+            <table id="assignmentsTable">
+                <thead>
+                    <tr>
+                        <th>Patient Name</th>
+                        <th>Doctor Name</th>
+                        <th>Room No</th>
+                    </tr>
+                </thead>
+                <tbody id="assignmentsList"></tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer role="contentinfo" class="site-footer">
+        <div class="footer-container">
+            <div class="footer-section contact-info">
+                <h3>Contact Us</h3>
+                <p>SRMIST, Chennai, Tamil Nadu<br />603-203</p>
+                <p>Phone: 7070662994 / 9906067891</p>
+                <p>Email: info@smhospital.com</p>
+            </div>
+            <div class="footer-section useful-links">
+                <h3>Useful Links</h3>
+                <ul>
+                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/terms">Terms of Service</a></li>
+                    <li><a href="/about">About Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section social-media">
+                <h3>Follow Us</h3>
+                <ul class="social-icons">
+                    <li><a href="#" aria-label="Facebook">Facebook</a></li>
+                    <li><a href="#" aria-label="Twitter">Twitter</a></li>
+                    <li><a href="#" aria-label="Instagram">Instagram</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 SM Hospital. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll-triggered content reveal and parallax effect
+        document.addEventListener('DOMContentLoaded', function () {
+            const mainContent = document.getElementById('mainContent');
+            const nav = document.querySelector('nav.monochrome-nav');
+            const tabs = document.querySelectorAll('nav.monochrome-nav ul li a');
+            const sections = document.querySelectorAll('section.content-section');
+
+            // Make nav visible on page load
+            nav.style.display = 'block';
+
+            // Function to hide all sections
+            function hideAllSections() {
+                sections.forEach(section => {
+                    section.style.display = 'none';
+                });
+            }
+
+            // Function to remove active class from all tabs
+            function deactivateAllTabs() {
+                tabs.forEach(tab => {
+                    tab.parentElement.classList.remove('active');
+                });
+            }
+
+            // Show the first section and activate first tab by default
+            if (sections.length > 0 && tabs.length > 0) {
+                hideAllSections();
+                sections[0].style.display = 'block';
+                tabs[0].parentElement.classList.add('active');
+            }
+
+            // Add click event listeners to tabs
+            tabs.forEach(tab => {
+            tab.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    hideAllSections();
+                    targetSection.style.display = 'block';
+                    deactivateAllTabs();
+                    this.parentElement.classList.add('active');
+                    // Smooth scroll to the target section
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+            });
+
+            function revealContent() {
+                if (window.scrollY > 100) {
+                    mainContent.style.opacity = '1';
+                    mainContent.style.transform = 'translateY(0)';
+                    // nav.style.display = 'block'; // no longer needed here
+                    window.removeEventListener('scroll', revealContent);
+                }
+            }
+
+            window.addEventListener('scroll', revealContent);
+
+            // Parallax effect for header - fixed selector
+            window.addEventListener('scroll', function () {
+                const scrollPos = window.scrollY;
+                const header = document.querySelector('header.parallax-header');
+                if (header) {
+                    header.style.backgroundPositionY = `${scrollPos * 0.5}px`;
+                }
+            });
+
+            // Offset anchor scrolling to account for fixed nav height
+            function offsetAnchor() {
+                if(location.hash.length !== 0) {
+                    window.scrollTo(window.scrollX, window.scrollY - nav.offsetHeight);
+                }
+            }
+
+            window.addEventListener("hashchange", offsetAnchor);
+
+            // Offset on initial load if there is a hash
+            window.setTimeout(offsetAnchor, 1);
+        });
+
+        // Removed showSection function as scrolling is handled by anchor links
+
+        async function fetchDoctors() {
+            try {
+                const response = await fetch('/api/doctors');
+                const doctors = await response.json();
+                const tbody = document.getElementById('doctorsList');
+                tbody.innerHTML = '';
+                doctors.forEach(doc => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${doc.doctor_id}</td>
+                        <td>${doc.name}</td>
+                        <td>${doc.qualification}</td>
+                        <td>${doc.department}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching doctors:', error);
+            }
+        }
+
+        async function fetchPatients() {
+            try {
+                const response = await fetch('/api/patients');
+                const patients = await response.json();
+                const tbody = document.getElementById('patientsList');
+                tbody.innerHTML = '';
+                patients.forEach(patient => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${patient.patient_id}</td>
+                        <td>${patient.name}</td>
+                        <td>${patient.gender}</td>
+                        <td>${patient.dob}</td>
+                        <td>${patient.mobile_no}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching patients:', error);
+            }
+        }
+
+        async function fetchRooms() {
+            try {
+                const response = await fetch('/api/rooms');
+                const rooms = await response.json();
+                const tbody = document.getElementById('roomsList');
+                tbody.innerHTML = '';
+                rooms.forEach(room => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${room.room_no}</td>
+                        <td>${room.room_type}</td>
+                        <td>${room.status}</td>
+                        <td>${room.price}</td>
+                        <td>${room.facilities}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching rooms:', error);
+            }
+        }
+
+        async function fetchPharmacy() {
+            try {
+                const response = await fetch('/api/pharmacy');
+                const pharmacies = await response.json();
+                const tbody = document.getElementById('pharmacyList');
+                tbody.innerHTML = '';
+                pharmacies.forEach(pharmacy => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${pharmacy.pharmacy_id}</td>
+                        <td>${pharmacy.name}</td>
+                        <td>${pharmacy.location}</td>
+                        <td>${pharmacy.phone_number}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching pharmacy:', error);
+            }
+        }
+
+        async function fetchBills() {
+            try {
+                const response = await fetch('/api/bills');
+                const bills = await response.json();
+                const tbody = document.getElementById('billsList');
+                tbody.innerHTML = '';
+                bills.forEach(bill => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${bill.bill_id}</td>
+                        <td>${bill.patient_id}</td>
+                        <td>${bill.amount}</td>
+                        <td>${bill.name}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching bills:', error);
+            }
+        }
+        
+        // Add missing functions for form submissions
+        async function addPatient() {
+            try {
+                const name = document.getElementById('pname').value;
+                const gender = document.getElementById('pgender').value;
+                const dob = document.getElementById('pdob').value;
+                const mobile = document.getElementById('pmobile').value;
+                
+                if (!name || !gender || !dob || !mobile) {
+                    alert('All fields are required');
+                    return;
+                }
+                
+                const response = await fetch('/api/patients/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name,
+                        gender,
+                        dob,
+                        mobile
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert('Patient added successfully');
+                    // Clear form
+                    document.getElementById('pname').value = '';
+                    document.getElementById('pgender').value = '';
+                    document.getElementById('pdob').value = '';
+                    document.getElementById('pmobile').value = '';
+                    // Refresh patient list
+                    fetchPatients();
+                } else {
+                    alert(`Error: ${result.error}`);
+                }
+            } catch (error) {
+                console.error('Error adding patient:', error);
+                alert('Failed to add patient. Please try again.');
+            }
+        }
+        
+        async function addRoom() {
+            try {
+                const room_no = document.getElementById('room_no').value;
+                const room_type = document.getElementById('room_type').value;
+                const status = document.getElementById('status').value;
+                const price = document.getElementById('price').value;
+                const facilities = document.getElementById('facilities').value;
+                
+                if (!room_no || !room_type || !status || !price || !facilities) {
+                    alert('All fields are required');
+                    return;
+                }
+                
+                const response = await fetch('/api/rooms/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        room_no,
+                        room_type,
+                        status,
+                        price,
+                        facilities
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert('Room added successfully');
+                    // Clear form
+                    document.getElementById('room_no').value = '';
+                    document.getElementById('room_type').value = '';
+                    document.getElementById('status').value = '';
+                    document.getElementById('price').value = '';
+                    document.getElementById('facilities').value = '';
+                    // Refresh room list
+                    fetchRooms();
+                } else {
+                    alert(`Error: ${result.error}`);
+                }
+            } catch (error) {
+                console.error('Error adding room:', error);
+                alert('Failed to add room. Please try again.');
+            }
+        }
+        
+        async function addBill() {
+            try {
+                const patient_id = document.getElementById('bill_patient_id').value;
+                const amount = document.getElementById('bill_amount').value;
+                const name = document.getElementById('bill_name').value;
+                
+                if (!patient_id || !amount || !name) {
+                    alert('All fields are required');
+                    return;
+                }
+                
+                const response = await fetch('/api/bills/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        patient_id,
+                        amount,
+                        name
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert('Bill added successfully');
+                    // Clear form
+                    document.getElementById('bill_patient_id').value = '';
+                    document.getElementById('bill_amount').value = '';
+                    document.getElementById('bill_name').value = '';
+                    // Refresh bill list
+                    fetchBills();
+                } else {
+                    alert(`Error: ${result.error}`);
+                }
+            } catch (error) {
+                console.error('Error adding bill:', error);
+                alert('Failed to add bill. Please try again.');
+            }
+        }
+
+        async function fetchAppointments() {
+            try {
+                const response = await fetch('/api/appointments');
+                const appointments = await response.json();
+                const tbody = document.getElementById('appointmentsList');
+                tbody.innerHTML = '';
+                appointments.forEach(appointment => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${appointment.appointment_id}</td>
+                        <td>${appointment.patient_name || appointment.patient_id}</td>
+                        <td>${appointment.doctor_name || appointment.doctor_id}</td>
+                        <td>${appointment.datetime}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching appointments:', error);
+            }
+        }
+
+        async function fetchAssignments() {
+            try {
+                const response = await fetch('/api/assignments');
+                const assignments = await response.json();
+                const tbody = document.getElementById('assignmentsList');
+                tbody.innerHTML = '';
+                assignments.forEach(assignment => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${assignment.patient_name}</td>
+                        <td>${assignment.doctor_name}</td>
+                        <td>${assignment.room_no}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching assignments:', error);
+            }
+        }
+
+        async function populateDropdowns() {
+            try {
+                const [patientsRes, doctorsRes, roomsRes] = await Promise.all([
+                    fetch('/api/patients'),
+                    fetch('/api/doctors'),
+                    fetch('/api/rooms')
+                ]);
+                const patients = await patientsRes.json();
+                const doctors = await doctorsRes.json();
+                const rooms = await roomsRes.json();
+
+                const appointmentPatientSelect = document.getElementById('appointment_patient_id');
+                const appointmentDoctorSelect = document.getElementById('appointment_doctor_id');
+                const assignmentPatientSelect = document.getElementById('assignment_patient_id');
+                const assignmentDoctorSelect = document.getElementById('assignment_doctor_id');
+                const assignmentRoomSelect = document.getElementById('assignment_room_id');
+
+                // Clear existing options except the first placeholder
+                [appointmentPatientSelect, assignmentPatientSelect].forEach(select => {
+                    select.innerHTML = '<option value="">Select Patient</option>';
+                    patients.forEach(p => {
+                        const option = document.createElement('option');
+                        option.value = p.patient_id;
+                        option.textContent = p.name;
+                        select.appendChild(option);
+                    });
+                });
+
+                [appointmentDoctorSelect, assignmentDoctorSelect].forEach(select => {
+                    select.innerHTML = '<option value="">Select Doctor</option>';
+                    doctors.forEach(d => {
+                        const option = document.createElement('option');
+                        option.value = d.doctor_id;
+                        option.textContent = d.name;
+                        select.appendChild(option);
+                    });
+                });
+
+                assignmentRoomSelect.innerHTML = '<option value="">Select Room</option>';
+                rooms.forEach(r => {
+                    const option = document.createElement('option');
+                    option.value = r.room_no; // Ensure room_no is used correctly
+                    option.textContent = `Room ${r.room_no}`;
+                    assignmentRoomSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error populating dropdowns:', error);
+            }
+        }
+
+        async function addAssignment() {
+            try {
+                const patient_id = document.getElementById('assignment_patient_id').value;
+                const doctor_id = document.getElementById('assignment_doctor_id').value;
+                const room_no = document.getElementById('assignment_room_id').value;
+
+                // Validate that all fields have values
+                if (!patient_id || !doctor_id || !room_no) {
+                    alert('All fields are required');
+                    return;
+                }
+
+                // Ensure room_no is a valid positive integer
+                if (isNaN(room_no) || parseInt(room_no) <= 0) {
+                    alert('Room number must be a valid positive integer');
+                    return;
+                }
+
+                const response = await fetch('/api/assignments/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        patient_id,
+                        doctor_id,
+                        room_no: parseInt(room_no) // Ensure room_no is sent as an integer
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert('Assignment added successfully');
+                    // Clear form
+                    document.getElementById('assignment_patient_id').value = '';
+                    document.getElementById('assignment_doctor_id').value = '';
+                    document.getElementById('assignment_room_id').value = '';
+                    // Refresh assignment list
+                    fetchAssignments();
+                } else {
+                    alert(`Error: ${result.error}`);
+                }
+            } catch (error) {
+                console.error('Error adding assignment:', error);
+                alert('Failed to add assignment. Please try again.');
+            }
+        }
+
+        // Update addAppointment to use dropdown values
+        async function addAppointment() {
+            try {
+                const patient_id = document.getElementById('appointment_patient_id').value;
+                const doctor_id = document.getElementById('appointment_doctor_id').value;
+                const datetime = document.getElementById('appointment_datetime').value;
+
+                if (!patient_id || !doctor_id || !datetime) {
+                    alert('All fields are required');
+                    return;
+                }
+
+                const response = await fetch('/api/appointments/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        patient_id,
+                        doctor_id,
+                        datetime
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert('Appointment added successfully');
+                    // Clear form
+                    document.getElementById('appointment_patient_id').value = '';
+                    document.getElementById('appointment_doctor_id').value = '';
+                    document.getElementById('appointment_datetime').value = '';
+                    // Refresh appointment list
+                    fetchAppointments();
+                } else {
+                    alert(`Error: ${result.error}`);
+                }
+            } catch (error) {
+                console.error('Error adding appointment:', error);
+                alert('Failed to add appointment. Please try again.');
+            }
+        }
+
+        // Fetch all data on page load to populate tables and dropdowns
+        document.addEventListener('DOMContentLoaded', () => {
+            populateDropdowns();
+            fetchDoctors();
+            fetchPatients();
+            fetchRooms();
+            fetchPharmacy();
+            fetchBills();
+            fetchAppointments();
+            fetchAssignments();
+        });
+
+        async function addAppointment() {
+            try {
+                const patient_id = document.getElementById('appointment_patient_id').value;
+                const doctor_id = document.getElementById('appointment_doctor_id').value;
+                const datetime = document.getElementById('appointment_datetime').value;
+
+                if (!patient_id || !doctor_id || !datetime) {
+                    alert('All fields are required');
+                    return;
+                }
+
+                const response = await fetch('/api/appointments/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        patient_id,
+                        doctor_id,
+                        datetime
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert('Appointment added successfully');
+                    // Clear form
+                    document.getElementById('appointment_patient_id').value = '';
+                    document.getElementById('appointment_doctor_id').value = '';
+                    document.getElementById('appointment_datetime').value = '';
+                    // Refresh appointment list
+                    fetchAppointments();
+                } else {
+                    alert(`Error: ${result.error}`);
+                }
+            } catch (error) {
+                console.error('Error adding appointment:', error);
+                alert('Failed to add appointment. Please try again.');
+            }
+        }
+
+        // Fetch all data on page load to populate tables
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchDoctors();
+            fetchPatients();
+            fetchRooms();
+            fetchPharmacy();
+            fetchBills();
+        });
+    </script>
+    <script>
+        // Fetch all data on page load to populate tables
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchDoctors();
+            fetchPatients();
+            fetchRooms();
+            fetchPharmacy();
+            fetchBills();
+        });
+    </script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        nav.monochrome-nav {
+            background-color: #008080;
+        }
+        nav.monochrome-nav ul li a {
+            color: white;
+            display: block;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+        nav.monochrome-nav ul li a:hover,
+        nav.monochrome-nav ul li a:focus {
+            background-color: transparent;
+            text-decoration: underline;
+            transform: scale(1.1);
+            transition: transform 0.3s ease;
+        }
+    </style>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script> <!-- Include animation script -->
+</body>
+</html>

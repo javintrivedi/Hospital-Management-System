@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Terms of Service - SM Hospital{% endblock %}
+
+{% block content %}
+<canvas id="animated-background" aria-hidden="true"></canvas> <!-- Add animated background -->
+<main class="container" role="main">
+    <h1>Terms of Service</h1>
+    <p>Welcome to SM Hospital. By accessing or using our services, you agree to comply with and be bound by the following terms and conditions.</p>
+    <h3>Use of Services</h3>
+    <p>You agree to use our services only for lawful purposes and in a way that does not infringe the rights of others.</p>
+    <h3>Appointment Policies</h3>
+    <p>Appointments must be scheduled in advance. Please notify us in case of cancellations or rescheduling.</p>
+    <h3>Patient Responsibilities</h3>
+    <p>Patients are responsible for providing accurate information and following medical advice.</p>
+    <h3>Limitation of Liability</h3>
+    <p>SM Hospital is not liable for any damages arising from the use of our services beyond what is permitted by law.</p>
+    <h3>Changes to Terms</h3>
+    <p>We reserve the right to update these terms and conditions at any time. Changes will be posted on this page.</p>
+</main>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='scripts.js') }}"></script> <!-- Include animation script -->
+{% endblock %}

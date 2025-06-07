@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Internal Server Error - SM Hospital{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <h1>500 - Internal Server Error</h1>
+    <p>Sorry, something went wrong on our end. Please try again later.</p>
+    <a href="{{ url_for('appointments') }}" class="btn btn-primary">Return to Dashboard</a>
+</div>
+
+<button id="back-to-top" aria-label="Back to top" title="Back to top">&#8679;</button>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .error-container {
+        text-align: center;
+        padding: 50px 20px;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .error-container h1 {
+        font-size: 3rem;
+        color: #333;
+        margin-bottom: 20px;
+    }
+    
+    .error-container p {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+    }
+    
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+    
+    .btn:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}
